@@ -1,16 +1,8 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { PaywallGate } from "@/components/paywall/paywall-gate";
 import { PLAN_LIMITS } from "@/lib/subscription";
-
-const statusColors: Record<string, string> = {
-  PENDENTE: "secondary",
-  PAGO: "default",
-  VENCIDO: "destructive",
-};
 
 export default function DASPage() {
   const { data: user } = useQuery({
@@ -24,27 +16,31 @@ export default function DASPage() {
     new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v);
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold">DAS — Documento de Arrecadação</h1>
+    <div className="space-y-8">
+      <h1 className="font-[family-name:var(--font-display)] text-2xl font-medium tracking-tight">
+        DAS — Documento de Arrecadação
+      </h1>
 
       <PaywallGate hasAccess={hasAccess} feature="DAS Automático">
-        <div className="grid gap-3">
-          <Card>
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-base">Maio 2026</CardTitle>
-                <Badge variant="secondary">PENDENTE</Badge>
-              </div>
-            </CardHeader>
-            <CardContent className="text-sm text-muted-foreground">
-              <span className="font-medium text-foreground">{formatCurrency(75.90)}</span>
-              <span className="ml-2">• Vencimento: 20/06/2026</span>
-            </CardContent>
-          </Card>
-          <p className="text-xs text-muted-foreground text-center">
-            O DAS é calculado automaticamente com base no faturamento mensal.
-          </p>
+        <div className="divide-y divide-border/50">
+          <div className="flex items-center justify-between py-4">
+            <div>
+              <p className="text-sm font-medium">Maio 2026</p>
+              <p className="text-xs text-muted-foreground mt-0.5">Vencimento: 20/06/2026</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground bg-muted px-2.5 py-1 rounded-full">
+                Pendente
+              </span>
+              <span className="text-sm font-medium tabular-nums w-24 text-right">
+                {formatCurrency(75.90)}
+              </span>
+            </div>
+          </div>
         </div>
+        <p className="text-xs text-muted-foreground text-center mt-6">
+          O DAS é calculado automaticamente com base no faturamento mensal.
+        </p>
       </PaywallGate>
     </div>
   );

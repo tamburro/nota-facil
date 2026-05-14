@@ -2,8 +2,6 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 
 export default function BillingPage() {
   const { data: user } = useQuery({
@@ -24,51 +22,72 @@ export default function BillingPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-lg">
-      <h1 className="text-2xl font-bold">Assinatura</h1>
+    <div className="space-y-8 max-w-lg">
+      <h1 className="font-[family-name:var(--font-display)] text-2xl font-medium tracking-tight">Assinatura</h1>
 
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>Seu plano</CardTitle>
-            {user && <Badge>{user.plan}</Badge>}
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {user?.plan === "PRO" ? (
-            <>
-              <p className="text-sm text-muted-foreground">
-                Plano PRO ativo. Próxima cobrança:{" "}
+      <div className="rounded-xl border border-border/60 p-6">
+        <div className="flex items-center justify-between mb-4">
+          <span className="text-sm text-muted-foreground">Seu plano</span>
+          {user && (
+            <span className="font-mono text-xs uppercase tracking-wider text-accent bg-accent/10 px-3 py-1 rounded-full">
+              {user.plan}
+            </span>
+          )}
+        </div>
+
+        {user?.plan === "PRO" ? (
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Plano PRO ativo. Próxima cobrança:{" "}
+              <span className="text-foreground">
                 {user.stripeCurrentPeriodEnd &&
                   new Date(user.stripeCurrentPeriodEnd).toLocaleDateString("pt-BR")}
-              </p>
-              <Button variant="outline" onClick={handlePortal}>
-                Gerenciar assinatura
-              </Button>
-            </>
-          ) : (
-            <>
-              <p className="text-sm text-muted-foreground">
-                {user?.plan === "TRIAL"
-                  ? "Você está no período de teste gratuito."
-                  : "Você está no plano gratuito com limite de 5 notas/mês."}
-              </p>
-              <div className="rounded-lg border border-accent/30 p-4 space-y-2">
-                <p className="font-semibold text-accent">Plano PRO — R$ 29/mês</p>
-                <ul className="text-sm text-muted-foreground space-y-1">
-                  <li>• Notas ilimitadas</li>
-                  <li>• Cobranças Pix com QR Code</li>
-                  <li>• DAS automático</li>
-                  <li>• DASN-SIMEI automático</li>
-                </ul>
-                <Button onClick={handleCheckout} className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
-                  Assinar PRO
-                </Button>
+              </span>
+            </p>
+            <Button variant="outline" onClick={handlePortal} className="rounded-full">
+              Gerenciar assinatura
+            </Button>
+          </div>
+        ) : (
+          <div className="space-y-5">
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {user?.plan === "TRIAL"
+                ? "Você está no período de teste gratuito."
+                : "Você está no plano gratuito com limite de 5 notas/mês."}
+            </p>
+            <div className="rounded-xl border border-accent/20 bg-accent/5 p-5 space-y-4">
+              <div>
+                <p className="font-[family-name:var(--font-display)] text-lg font-medium tracking-tight">
+                  Plano PRO
+                </p>
+                <p className="text-2xl font-[family-name:var(--font-display)] font-medium tracking-tight mt-1">
+                  R$ 29<span className="text-sm text-muted-foreground font-normal ml-1">/mês</span>
+                </p>
               </div>
-            </>
-          )}
-        </CardContent>
-      </Card>
+              <ul className="text-sm text-muted-foreground space-y-2">
+                <li className="flex items-center gap-2">
+                  <span className="text-accent">✓</span> Notas ilimitadas
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-accent">✓</span> Cobranças Pix com QR Code
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-accent">✓</span> DAS automático
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-accent">✓</span> DASN-SIMEI automático
+                </li>
+              </ul>
+              <Button
+                onClick={handleCheckout}
+                className="w-full rounded-full bg-accent text-accent-foreground hover:bg-accent/90"
+              >
+                Assinar PRO
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

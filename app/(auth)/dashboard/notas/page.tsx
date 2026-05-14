@@ -7,15 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
+import { Plus } from "lucide-react";
 
-const statusColors: Record<string, string> = {
-  DRAFT: "secondary",
-  EMITIDA: "default",
-  CANCELADA: "destructive",
+const statusLabels: Record<string, { label: string; className: string }> = {
+  DRAFT: { label: "Rascunho", className: "text-muted-foreground bg-muted" },
+  EMITIDA: { label: "Emitida", className: "text-accent bg-accent/10" },
+  CANCELADA: { label: "Cancelada", className: "text-destructive bg-destructive/10" },
 };
 
 export default function NotasPage() {
@@ -64,13 +63,12 @@ export default function NotasPage() {
     new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Notas Fiscais</h1>
+        <h1 className="font-[family-name:var(--font-display)] text-2xl font-medium tracking-tight">Notas Fiscais</h1>
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger
-            className="inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-4 py-2 bg-accent text-accent-foreground hover:bg-accent/90"
-          >
+          <DialogTrigger className="inline-flex items-center justify-center gap-2 rounded-full text-sm font-medium h-9 px-5 bg-accent text-accent-foreground hover:bg-accent/90">
+            <Plus className="h-4 w-4" strokeWidth={1.5} />
             Nova Nota
           </DialogTrigger>
           <DialogContent>
@@ -97,7 +95,7 @@ export default function NotasPage() {
                 <Label>Valor (R$)</Label>
                 <Input name="valor" type="number" step="0.01" min="0.01" required />
               </div>
-              <Button type="submit" className="w-full bg-accent text-accent-foreground hover:bg-accent/90" disabled={createInvoice.isPending}>
+              <Button type="submit" className="w-full rounded-full bg-accent text-accent-foreground hover:bg-accent/90" disabled={createInvoice.isPending}>
                 {createInvoice.isPending ? "Criando..." : "Criar Nota"}
               </Button>
             </form>
@@ -105,25 +103,28 @@ export default function NotasPage() {
         </Dialog>
       </div>
 
-      <div className="grid gap-3">
-        {invoices.map((inv: { id: string; descricao: string; valor: number; status: string; client: { nome: string }; emitidaAt?: string }) => (
-          <Card key={inv.id}>
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-base">{inv.descricao}</CardTitle>
-                <Badge variant={statusColors[inv.status] as "default" | "secondary" | "destructive"}>
-                  {inv.status}
-                </Badge>
+      <div className="divide-y divide-border/50">
+        {invoices.map((inv: { id: string; descricao: string; valor: number; status: string; client: { nome: string } }) => {
+          const st = statusLabels[inv.status] || statusLabels.DRAFT;
+          return (
+            <div key={inv.id} className="flex items-center justify-between py-4">
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium truncate">{inv.descricao}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{inv.client.nome}</p>
               </div>
-            </CardHeader>
-            <CardContent className="flex items-center justify-between text-sm text-muted-foreground">
-              <span>{inv.client.nome}</span>
-              <span className="font-medium text-foreground">{formatCurrency(inv.valor)}</span>
-            </CardContent>
-          </Card>
-        ))}
+              <div className="flex items-center gap-4 ml-4">
+                <span className={`font-mono text-xs uppercase tracking-wider px-2.5 py-1 rounded-full ${st.className}`}>
+                  {st.label}
+                </span>
+                <span className="text-sm font-medium tabular-nums w-24 text-right">
+                  {formatCurrency(inv.valor)}
+                </span>
+              </div>
+            </div>
+          );
+        })}
         {invoices.length === 0 && (
-          <p className="text-muted-foreground text-center py-8">Nenhuma nota emitida.</p>
+          <p className="text-muted-foreground text-center py-12 text-sm">Nenhuma nota emitida.</p>
         )}
       </div>
     </div>

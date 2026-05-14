@@ -6,10 +6,9 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
+import { Plus } from "lucide-react";
 
 export default function ClientesPage() {
   const queryClient = useQueryClient();
@@ -51,13 +50,12 @@ export default function ClientesPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Clientes</h1>
+        <h1 className="font-[family-name:var(--font-display)] text-2xl font-medium tracking-tight">Clientes</h1>
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger
-            className="inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-4 py-2 bg-accent text-accent-foreground hover:bg-accent/90"
-          >
+          <DialogTrigger className="inline-flex items-center justify-center gap-2 rounded-full text-sm font-medium h-9 px-5 bg-accent text-accent-foreground hover:bg-accent/90">
+            <Plus className="h-4 w-4" strokeWidth={1.5} />
             Novo Cliente
           </DialogTrigger>
           <DialogContent>
@@ -91,7 +89,7 @@ export default function ClientesPage() {
                 <Label htmlFor="endereco">Endereço</Label>
                 <Input name="endereco" />
               </div>
-              <Button type="submit" className="w-full bg-accent text-accent-foreground hover:bg-accent/90" disabled={createClient.isPending}>
+              <Button type="submit" className="w-full rounded-full bg-accent text-accent-foreground hover:bg-accent/90" disabled={createClient.isPending}>
                 {createClient.isPending ? "Salvando..." : "Salvar"}
               </Button>
             </form>
@@ -99,22 +97,22 @@ export default function ClientesPage() {
         </Dialog>
       </div>
 
-      <div className="grid gap-3">
+      <div className="divide-y divide-border/50">
         {clients.map((client: { id: string; nome: string; cpfCnpj: string; tipo: string; email?: string }) => (
-          <Card key={client.id}>
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-base">{client.nome}</CardTitle>
-                <Badge variant="secondary">{client.tipo}</Badge>
-              </div>
-            </CardHeader>
-            <CardContent className="text-sm text-muted-foreground">
-              {client.cpfCnpj} {client.email && `• ${client.email}`}
-            </CardContent>
-          </Card>
+          <div key={client.id} className="flex items-center justify-between py-4">
+            <div>
+              <p className="text-sm font-medium">{client.nome}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {client.cpfCnpj} {client.email && `· ${client.email}`}
+              </p>
+            </div>
+            <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground bg-muted px-2.5 py-1 rounded-full">
+              {client.tipo}
+            </span>
+          </div>
         ))}
         {clients.length === 0 && (
-          <p className="text-muted-foreground text-center py-8">Nenhum cliente cadastrado.</p>
+          <p className="text-muted-foreground text-center py-12 text-sm">Nenhum cliente cadastrado.</p>
         )}
       </div>
     </div>
