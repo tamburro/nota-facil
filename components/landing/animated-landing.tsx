@@ -12,6 +12,7 @@ import {
   BarChart3,
   Calculator,
   FileSpreadsheet,
+  Check,
 } from "lucide-react";
 import NotaFiscal3D from "@/components/landing/nota-fiscal-3d";
 
@@ -76,6 +77,28 @@ export default function AnimatedLanding() {
           stagger: 0.15,
           ease: "power3.out",
           delay: 0.2,
+        });
+
+        // Cards flutuantes ao redor da nota
+        const floatCards =
+          heroEl.querySelectorAll<HTMLElement>("[data-float-card]");
+        gsap.set(floatCards, { opacity: 0 });
+        gsap.to(floatCards, {
+          opacity: 1,
+          duration: 0.6,
+          stagger: 0.18,
+          delay: 0.9,
+          ease: "power2.out",
+        });
+        floatCards.forEach((card, i) => {
+          gsap.to(card, {
+            y: -12,
+            duration: 2.4 + i * 0.5,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut",
+            delay: i * 0.4,
+          });
         });
       }
 
@@ -178,7 +201,7 @@ export default function AnimatedLanding() {
 
       {/* Hero */}
       <section ref={heroRef} className="px-6 py-20 md:py-28">
-        <div className="container mx-auto grid items-center gap-10 md:grid-cols-2 md:gap-12">
+        <div className="mx-auto grid max-w-6xl items-center gap-10 md:grid-cols-2 md:gap-8">
           {/* Conteúdo — esquerda */}
           <div className="flex flex-col items-center text-center md:items-start md:text-left">
             <p
@@ -222,8 +245,58 @@ export default function AnimatedLanding() {
           </div>
 
           {/* Nota 3D — direita */}
-          <div data-hero-item className="w-full max-w-md md:ml-auto md:order-last">
-            <NotaFiscal3D />
+          <div data-hero-item className="w-full max-w-md md:mx-auto md:order-last">
+            <div className="relative">
+              {/* Glow coral atrás da nota */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 flex items-center justify-center"
+              >
+                <div className="h-56 w-56 rounded-full bg-accent/30 blur-[100px]" />
+              </div>
+
+              <NotaFiscal3D />
+
+              {/* Cards flutuantes */}
+              <div
+                data-float-card
+                className="absolute top-0 -left-20 hidden md:flex items-center gap-3 rounded-xl border border-border/60 bg-card/80 backdrop-blur px-4 py-3 shadow-xl shadow-black/40"
+              >
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent/15 text-accent">
+                  <Check className="h-4 w-4" strokeWidth={2.5} />
+                </span>
+                <div className="text-left">
+                  <p className="text-xs text-muted-foreground">Pix recebido</p>
+                  <p className="text-sm font-medium leading-tight">R$ 850,00</p>
+                </div>
+              </div>
+
+              <div
+                data-float-card
+                className="absolute top-1/2 -left-28 -translate-y-1/2 hidden md:flex items-center gap-3 rounded-xl border border-border/60 bg-card/80 backdrop-blur px-4 py-3 shadow-xl shadow-black/40"
+              >
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-coral-soft/15 text-coral-soft">
+                  <FileText className="h-4 w-4" strokeWidth={2} />
+                </span>
+                <div className="text-left">
+                  <p className="text-xs text-muted-foreground">NFS-e emitida</p>
+                  <p className="text-sm font-medium leading-tight">nº 0042</p>
+                </div>
+              </div>
+
+              <div
+                data-float-card
+                className="absolute bottom-0 -left-14 hidden md:flex items-center gap-3 rounded-xl border border-border/60 bg-card/80 backdrop-blur px-4 py-3 shadow-xl shadow-black/40"
+              >
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent/15 text-accent">
+                  <Calculator className="h-4 w-4" strokeWidth={2} />
+                </span>
+                <div className="text-left">
+                  <p className="text-xs text-muted-foreground">DAS pago</p>
+                  <p className="text-sm font-medium leading-tight">R$ 75,00</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
