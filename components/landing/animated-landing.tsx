@@ -200,8 +200,8 @@ export default function AnimatedLanding() {
       </header>
 
       {/* Hero */}
-      <section ref={heroRef} className="px-6 py-20 md:py-28">
-        <div className="mx-auto grid max-w-6xl items-center gap-10 md:grid-cols-2 md:gap-8">
+      <section ref={heroRef} className="py-20 md:py-28">
+        <div className="container mx-auto grid items-center gap-10 px-6 md:grid-cols-2 md:gap-8">
           {/* Conteúdo — esquerda */}
           <div className="flex flex-col items-center text-center md:items-start md:text-left">
             <p
