@@ -179,13 +179,8 @@ export default function AnimatedLanding() {
       {/* Hero */}
       <section ref={heroRef} className="px-6 py-20 md:py-28">
         <div className="container mx-auto grid items-center gap-10 md:grid-cols-2 md:gap-12">
-          {/* Nota 3D — esquerda */}
-          <div data-hero-item className="w-full max-w-md md:mr-auto">
-            <NotaFiscal3D />
-          </div>
-
-          {/* Conteúdo — direita */}
-          <div className="flex flex-col items-center text-center md:items-end md:text-right">
+          {/* Conteúdo — esquerda */}
+          <div className="flex flex-col items-center text-center md:items-start md:text-left">
             <p
               data-hero-item
               className="font-mono text-xs uppercase tracking-[0.2em] text-accent mb-6"
@@ -224,6 +219,11 @@ export default function AnimatedLanding() {
                 </Button>
               </a>
             </div>
+          </div>
+
+          {/* Nota 3D — direita */}
+          <div data-hero-item className="w-full max-w-md md:ml-auto md:order-last">
+            <NotaFiscal3D />
           </div>
         </div>
       </section>
