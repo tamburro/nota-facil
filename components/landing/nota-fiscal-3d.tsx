@@ -2,34 +2,49 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
 
 const CORAL = "#ff7759";
 const PAPER = "#f5f5f0";
 const INK = "#17171c";
+const LINE = "#cfcfca";
 
-function makeQrTexture() {
-  const size = 132;
-  const canvas = document.createElement("canvas");
-  canvas.width = canvas.height = size;
-  const ctx = canvas.getContext("2d")!;
+function roundRect(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  r: number,
+) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+function drawQr(
+  ctx: CanvasRenderingContext2D,
+  ox: number,
+  oy: number,
+  size: number,
+) {
   ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0, 0, size, size);
-
+  ctx.fillRect(ox, oy, size, size);
   const cells = 11;
   const cell = size / cells;
   ctx.fillStyle = "#0a0a0f";
   for (let y = 0; y < cells; y++) {
     for (let x = 0; x < cells; x++) {
       if ((x * 7 + y * 13 + x * y) % 3 === 0) {
-        ctx.fillRect(x * cell, y * cell, cell, cell);
+        ctx.fillRect(ox + x * cell, oy + y * cell, cell, cell);
       }
     }
   }
-
-  // finder squares nos 3 cantos
-  const drawFinder = (px: number, py: number) => {
+  const finder = (px: number, py: number) => {
     ctx.fillStyle = "#0a0a0f";
     ctx.fillRect(px, py, cell * 3, cell * 3);
     ctx.fillStyle = "#ffffff";
@@ -37,26 +52,67 @@ function makeQrTexture() {
     ctx.fillStyle = "#0a0a0f";
     ctx.fillRect(px + cell, py + cell, cell, cell);
   };
-  drawFinder(0, 0);
-  drawFinder(size - cell * 3, 0);
-  drawFinder(0, size - cell * 3);
+  finder(ox, oy);
+  finder(ox + size - cell * 3, oy);
+  finder(ox, oy + size - cell * 3);
+}
+
+function makeInvoiceTexture() {
+  const W = 560;
+  const H = 740;
+  const canvas = document.createElement("canvas");
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext("2d")!;
+  ctx.clearRect(0, 0, W, H);
+
+  // cartão (cantos arredondados; fora fica transparente)
+  roundRect(ctx, 0, 0, W, H, 40);
+  ctx.fillStyle = PAPER;
+  ctx.fill();
+
+  // faixa coral do cabeçalho
+  roundRect(ctx, 56, 60, W - 112, 70, 16);
+  ctx.fillStyle = CORAL;
+  ctx.fill();
+
+  // linhas de texto
+  ctx.fillStyle = LINE;
+  const lines: [number, number, number][] = [
+    [56, 200, 340],
+    [56, 246, 280],
+    [56, 292, 340],
+    [56, 338, 230],
+  ];
+  lines.forEach(([x, y, w]) => {
+    roundRect(ctx, x, y, w, 18, 9);
+    ctx.fill();
+  });
+
+  // QR do Pix
+  drawQr(ctx, 56, 470, 170);
+
+  // valor / total
+  ctx.fillStyle = INK;
+  roundRect(ctx, 316, 498, 188, 40, 8);
+  ctx.fill();
+  ctx.fillStyle = LINE;
+  roundRect(ctx, 360, 558, 144, 20, 10);
+  ctx.fill();
 
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 8;
   return tex;
 }
 
-const textLines = [
-  { y: 0.7, w: 1.7 },
-  { y: 0.42, w: 1.4 },
-  { y: 0.14, w: 1.7 },
-  { y: -0.14, w: 1.2 },
-];
-
 function Invoice({ reducedMotion }: { reducedMotion: boolean }) {
   const group = useRef<THREE.Group>(null);
+  const geomRef = useRef<THREE.PlaneGeometry>(null);
+  const basePos = useRef<Float32Array | null>(null);
+  const wavedOnce = useRef(false);
   const pointer = useRef({ x: 0, y: 0 });
-  const qrTexture = useMemo(() => makeQrTexture(), []);
+  const texture = useMemo(() => makeInvoiceTexture(), []);
 
   useEffect(() => {
     if (reducedMotion) return;
@@ -68,61 +124,52 @@ function Invoice({ reducedMotion }: { reducedMotion: boolean }) {
     return () => window.removeEventListener("pointermove", handler);
   }, [reducedMotion]);
 
-  useEffect(() => () => qrTexture.dispose(), [qrTexture]);
+  useEffect(() => () => texture.dispose(), [texture]);
 
   useFrame((state) => {
-    if (!group.current || reducedMotion) return;
-    const t = state.clock.elapsedTime;
-    group.current.position.y = Math.sin(t * 0.8) * 0.12;
-    const targetX = -pointer.current.y * 0.22 - 0.08;
-    const targetY = pointer.current.x * 0.4 - 0.25;
-    group.current.rotation.x = THREE.MathUtils.lerp(
-      group.current.rotation.x,
-      targetX,
-      0.045,
-    );
-    group.current.rotation.y = THREE.MathUtils.lerp(
-      group.current.rotation.y,
-      targetY,
-      0.045,
-    );
+    const g = group.current;
+    if (g && !reducedMotion) {
+      const t = state.clock.elapsedTime;
+      g.position.y = Math.sin(t * 0.8) * 0.12;
+      const targetX = -pointer.current.y * 0.22 - 0.08;
+      const targetY = pointer.current.x * 0.4 - 0.25;
+      g.rotation.x = THREE.MathUtils.lerp(g.rotation.x, targetX, 0.045);
+      g.rotation.y = THREE.MathUtils.lerp(g.rotation.y, targetY, 0.045);
+    }
+
+    // ondulação do papel
+    const geo = geomRef.current;
+    if (!geo) return;
+    const pos = geo.attributes.position as THREE.BufferAttribute;
+    if (!basePos.current) basePos.current = Float32Array.from(pos.array);
+    if (reducedMotion && wavedOnce.current) return;
+
+    const t = reducedMotion ? 0 : state.clock.elapsedTime;
+    const base = basePos.current;
+    for (let i = 0; i < pos.count; i++) {
+      const ix = i * 3;
+      const x = base[ix];
+      const y = base[ix + 1];
+      pos.array[ix + 2] =
+        0.085 * Math.sin(x * 2 + y * 0.7 + t * 0.7) +
+        0.045 * Math.sin(x * 3.4 - t * 0.5);
+    }
+    pos.needsUpdate = true;
+    geo.computeVertexNormals();
+    wavedOnce.current = true;
   });
 
   return (
     <group ref={group} rotation={[-0.08, -0.25, 0]}>
-      {/* papel */}
-      <RoundedBox args={[2.5, 3.3, 0.08]} radius={0.07} smoothness={4}>
-        <meshStandardMaterial color={PAPER} roughness={0.65} metalness={0} />
-      </RoundedBox>
-
-      {/* faixa coral do cabeçalho */}
-      <mesh position={[0, 1.25, 0.045]}>
-        <boxGeometry args={[2.1, 0.36, 0.01]} />
-        <meshStandardMaterial color={CORAL} roughness={0.5} />
-      </mesh>
-
-      {/* linhas de texto */}
-      {textLines.map((l, i) => (
-        <mesh key={i} position={[-1 + l.w / 2, l.y, 0.045]}>
-          <boxGeometry args={[l.w, 0.11, 0.01]} />
-          <meshStandardMaterial color="#c9c9c4" roughness={0.8} />
-        </mesh>
-      ))}
-
-      {/* QR code do Pix */}
-      <mesh position={[-0.55, -0.95, 0.045]}>
-        <planeGeometry args={[0.85, 0.85]} />
-        <meshStandardMaterial map={qrTexture} roughness={0.9} />
-      </mesh>
-
-      {/* valor / total */}
-      <mesh position={[0.62, -0.78, 0.045]}>
-        <boxGeometry args={[0.85, 0.18, 0.01]} />
-        <meshStandardMaterial color={INK} roughness={0.7} />
-      </mesh>
-      <mesh position={[0.62, -1.08, 0.045]}>
-        <boxGeometry args={[0.65, 0.1, 0.01]} />
-        <meshStandardMaterial color="#c9c9c4" roughness={0.8} />
+      <mesh>
+        <planeGeometry ref={geomRef} args={[2.5, 3.3, 40, 52]} />
+        <meshStandardMaterial
+          map={texture}
+          roughness={0.7}
+          metalness={0}
+          side={THREE.DoubleSide}
+          alphaTest={0.5}
+        />
       </mesh>
     </group>
   );
@@ -139,7 +186,8 @@ export default function NotaFiscal3D() {
     );
   }, []);
 
-  if (!mounted) return <div className="h-[300px] w-full sm:h-[340px]" aria-hidden />;
+  if (!mounted)
+    return <div className="h-[300px] w-full sm:h-[340px]" aria-hidden />;
 
   return (
     <div className="h-[300px] w-full sm:h-[340px]" aria-hidden>
