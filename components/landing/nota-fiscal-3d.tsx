@@ -151,8 +151,8 @@ function Invoice({ reducedMotion }: { reducedMotion: boolean }) {
       const x = base[ix];
       const y = base[ix + 1];
       pos.array[ix + 2] =
-        0.085 * Math.sin(x * 2 + y * 0.7 + t * 0.7) +
-        0.045 * Math.sin(x * 3.4 - t * 0.5);
+        0.055 * Math.sin(y * 1.3 + t * 0.5) +
+        0.015 * Math.sin(x * 1.4 - t * 0.4);
     }
     pos.needsUpdate = true;
     geo.computeVertexNormals();
