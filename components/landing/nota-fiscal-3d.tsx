@@ -150,9 +150,9 @@ function Invoice({ reducedMotion }: { reducedMotion: boolean }) {
       const ix = i * 3;
       const x = base[ix];
       const y = base[ix + 1];
+      const nx = x / 1.25;
       pos.array[ix + 2] =
-        0.055 * Math.sin(y * 1.3 + t * 0.5) +
-        0.015 * Math.sin(x * 1.4 - t * 0.4);
+        -0.18 * (1 - nx * nx) + 0.012 * Math.sin(y * 1.1 + t * 0.5);
     }
     pos.needsUpdate = true;
     geo.computeVertexNormals();
