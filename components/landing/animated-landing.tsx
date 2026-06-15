@@ -245,7 +245,7 @@ export default function AnimatedLanding() {
           </div>
 
           {/* Nota 3D — direita */}
-          <div data-hero-item className="w-full max-w-md md:mx-auto md:order-last">
+          <div data-hero-item className="w-full max-w-md mx-auto md:order-last">
             <div className="relative">
               {/* Glow coral atrás da nota */}
               <div
@@ -260,9 +260,9 @@ export default function AnimatedLanding() {
               {/* Cards flutuantes */}
               <div
                 data-float-card
-                className="absolute top-0 -left-20 hidden md:flex items-center gap-3 rounded-xl border border-border/60 bg-card/80 backdrop-blur px-4 py-3 shadow-xl shadow-black/40"
+                className="absolute -left-2 top-2 flex items-center gap-2.5 rounded-xl border border-border/60 bg-card/80 px-3 py-2.5 shadow-xl shadow-black/40 backdrop-blur md:-left-20 md:top-0 md:gap-3 md:px-4 md:py-3"
               >
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent/15 text-accent">
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent/15 text-accent md:h-9 md:w-9">
                   <Check className="h-4 w-4" strokeWidth={2.5} />
                 </span>
                 <div className="text-left">
@@ -273,7 +273,7 @@ export default function AnimatedLanding() {
 
               <div
                 data-float-card
-                className="absolute top-1/2 -left-28 -translate-y-1/2 hidden md:flex items-center gap-3 rounded-xl border border-border/60 bg-card/80 backdrop-blur px-4 py-3 shadow-xl shadow-black/40"
+                className="absolute top-1/2 -left-28 hidden -translate-y-1/2 items-center gap-3 rounded-xl border border-border/60 bg-card/80 px-4 py-3 shadow-xl shadow-black/40 backdrop-blur md:flex"
               >
                 <span className="flex h-9 w-9 items-center justify-center rounded-full bg-coral-soft/15 text-coral-soft">
                   <FileText className="h-4 w-4" strokeWidth={2} />
@@ -286,9 +286,9 @@ export default function AnimatedLanding() {
 
               <div
                 data-float-card
-                className="absolute bottom-0 -left-14 hidden md:flex items-center gap-3 rounded-xl border border-border/60 bg-card/80 backdrop-blur px-4 py-3 shadow-xl shadow-black/40"
+                className="absolute -right-2 bottom-2 left-auto flex items-center gap-2.5 rounded-xl border border-border/60 bg-card/80 px-3 py-2.5 shadow-xl shadow-black/40 backdrop-blur md:bottom-0 md:-left-14 md:right-auto md:gap-3 md:px-4 md:py-3"
               >
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent/15 text-accent">
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent/15 text-accent md:h-9 md:w-9">
                   <Calculator className="h-4 w-4" strokeWidth={2} />
                 </span>
                 <div className="text-left">

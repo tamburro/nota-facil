@@ -139,10 +139,10 @@ export default function NotaFiscal3D() {
     );
   }, []);
 
-  if (!mounted) return <div className="h-[340px] w-full" aria-hidden />;
+  if (!mounted) return <div className="h-[300px] w-full sm:h-[340px]" aria-hidden />;
 
   return (
-    <div className="h-[340px] w-full" aria-hidden>
+    <div className="h-[300px] w-full sm:h-[340px]" aria-hidden>
       <Canvas
         camera={{ position: [0, 0, 6], fov: 35 }}
         dpr={[1, 2]}
