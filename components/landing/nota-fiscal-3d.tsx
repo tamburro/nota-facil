@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
+import { Environment, Lightformer } from "@react-three/drei";
 import { useTheme } from "next-themes";
 import * as THREE from "three";
 
@@ -164,10 +165,13 @@ function Invoice({ reducedMotion }: { reducedMotion: boolean }) {
     <group ref={group} rotation={[-0.08, -0.25, 0]}>
       <mesh>
         <planeGeometry ref={geomRef} args={[2.5, 3.3, 40, 52]} />
-        <meshStandardMaterial
+        <meshPhysicalMaterial
           map={texture}
-          roughness={0.7}
+          roughness={0.55}
           metalness={0}
+          clearcoat={0.35}
+          clearcoatRoughness={0.4}
+          envMapIntensity={0.7}
           side={THREE.DoubleSide}
           alphaTest={0.5}
         />
@@ -199,13 +203,28 @@ export default function NotaFiscal3D() {
         dpr={[1, 2]}
         gl={{ antialias: true, alpha: true }}
       >
-        <ambientLight intensity={light ? 1.55 : 0.9} />
-        <directionalLight position={[3, 4, 5]} intensity={light ? 1.2 : 1.4} />
+        <ambientLight intensity={light ? 1.4 : 0.8} />
+        <directionalLight position={[3, 4, 5]} intensity={light ? 1.1 : 1.3} />
         <pointLight
           position={[-4, -2, 3]}
           intensity={light ? 7 : 20}
           color={CORAL}
         />
+        {/* reflexo de luz ambiente (sem HDR externo) */}
+        <Environment resolution={128} frames={1}>
+          <Lightformer
+            intensity={light ? 1.4 : 1}
+            position={[2, 3, 4]}
+            scale={[7, 7, 1]}
+            color="#ffffff"
+          />
+          <Lightformer
+            intensity={0.45}
+            position={[-4, -1, 2]}
+            scale={[6, 6, 1]}
+            color="#ffd9cf"
+          />
+        </Environment>
         <Invoice reducedMotion={reducedMotion} />
       </Canvas>
     </div>
