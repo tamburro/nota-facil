@@ -28,7 +28,7 @@ export default function DashboardPage() {
   const metrics = [
     { label: "Notas Emitidas", value: emitidas, icon: FileText, color: "text-foreground" },
     { label: "Pagas", value: pagas, icon: CircleCheck, color: "text-accent" },
-    { label: "Pendentes", value: pendentes, icon: Clock, color: "text-coral-soft" },
+    { label: "Pendentes", value: pendentes, icon: Clock, color: "text-amber-700 dark:text-coral-soft" },
     {
       label: "Total Faturado",
       value: new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(totalFaturado),
