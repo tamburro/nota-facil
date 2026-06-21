@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { LayoutDashboard, FileText, Users, QrCode, Calculator, CreditCard, LogOut } from "lucide-react";
 
 const links = [
@@ -44,15 +45,18 @@ export function SidebarNav() {
           </Link>
         ))}
       </nav>
-      <Button
-        variant="ghost"
-        size="sm"
-        className="justify-start gap-3 text-muted-foreground hover:text-foreground px-3"
-        onClick={() => signOut({ callbackUrl: "/" })}
-      >
-        <LogOut className="h-4 w-4" strokeWidth={1.5} />
-        Sair
-      </Button>
+      <div className="flex items-center justify-between gap-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="justify-start gap-3 text-muted-foreground hover:text-foreground px-3"
+          onClick={() => signOut({ callbackUrl: "/" })}
+        >
+          <LogOut className="h-4 w-4" strokeWidth={1.5} />
+          Sair
+        </Button>
+        <ThemeToggle />
+      </div>
     </aside>
   );
 }

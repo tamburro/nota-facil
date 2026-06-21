@@ -15,6 +15,7 @@ import {
   Check,
 } from "lucide-react";
 import NotaFiscal3D from "@/components/landing/nota-fiscal-3d";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -177,7 +178,8 @@ export default function AnimatedLanding() {
           <span className="font-[family-name:var(--font-display)] text-xl font-medium tracking-tight">
             Nota Fácil
           </span>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
+            <ThemeToggle />
             <Link href="/login">
               <Button
                 variant="ghost"

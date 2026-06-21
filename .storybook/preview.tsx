@@ -2,25 +2,38 @@ import type { Preview } from "@storybook/react";
 import "./preview.css";
 
 const preview: Preview = {
-  parameters: {
-    backgrounds: {
-      default: "Nota Fácil",
-      values: [
-        { name: "Nota Fácil", value: "#0c0c11" },
-        { name: "Card", value: "#151519" },
-        { name: "Deep Green", value: "#003c33" },
-      ],
+  globalTypes: {
+    theme: {
+      description: "Tema do Nota Fácil",
+      defaultValue: "dark",
+      toolbar: {
+        title: "Tema",
+        icon: "circlehollow",
+        items: [
+          { value: "dark", title: "Escuro", icon: "moon" },
+          { value: "light", title: "Claro", icon: "sun" },
+        ],
+        dynamicTitle: true,
+      },
     },
+  },
+  parameters: {
+    backgrounds: { disable: true },
     controls: {
       matchers: { color: /(background|color)$/i, date: /Date$/i },
     },
   },
   decorators: [
-    (Story) => (
-      <div className="bg-background text-foreground font-sans p-10">
-        <Story />
-      </div>
-    ),
+    (Story, context) => {
+      const isDark = context.globals.theme !== "light";
+      return (
+        <div
+          className={`${isDark ? "dark " : ""}bg-background text-foreground font-sans p-10`}
+        >
+          <Story />
+        </div>
+      );
+    },
   ],
 };
 

@@ -5,7 +5,7 @@
 ## Convenções
 
 - Respostas e UI em português (PT-BR)
-- Dark-first: tema escuro é o padrão, sem toggle light/dark
+- Dark-first: tema escuro é o padrão. Toggle light/dark via `next-themes` (`attribute="class"`, `defaultTheme="dark"`). Tokens dark em `.dark`, light em `:root` (globals.css)
 - Cores via tokens Tailwind semânticos (`bg-primary`, `text-accent`), nunca hex hardcoded
 - Validação com Zod v4 (`zod/v4`)
 - Auth.js v5 (beta) com variáveis `AUTH_*` (não NEXTAUTH_*)
