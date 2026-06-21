@@ -262,7 +262,7 @@ export default function AnimatedLanding() {
               {/* Cards flutuantes */}
               <div
                 data-float-card
-                className="absolute -left-2 top-2 flex items-center gap-2.5 rounded-xl border border-border/60 bg-card/80 px-3 py-2.5 shadow-xl shadow-black/40 backdrop-blur md:-left-20 md:top-0 md:gap-3 md:px-4 md:py-3"
+                className="absolute -left-2 top-2 flex items-center gap-2.5 rounded-xl border border-border/60 bg-card/80 px-3 py-2.5 shadow-lg shadow-black/[0.07] dark:shadow-xl dark:shadow-black/40 backdrop-blur md:-left-20 md:top-0 md:gap-3 md:px-4 md:py-3"
               >
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent/15 text-accent md:h-9 md:w-9">
                   <Check className="h-4 w-4" strokeWidth={2.5} />
@@ -275,7 +275,7 @@ export default function AnimatedLanding() {
 
               <div
                 data-float-card
-                className="absolute top-1/2 -left-28 hidden -translate-y-1/2 items-center gap-3 rounded-xl border border-border/60 bg-card/80 px-4 py-3 shadow-xl shadow-black/40 backdrop-blur md:flex"
+                className="absolute top-1/2 -left-28 hidden -translate-y-1/2 items-center gap-3 rounded-xl border border-border/60 bg-card/80 px-4 py-3 shadow-lg shadow-black/[0.07] dark:shadow-xl dark:shadow-black/40 backdrop-blur md:flex"
               >
                 <span className="flex h-9 w-9 items-center justify-center rounded-full bg-coral-soft/15 text-coral-soft">
                   <FileText className="h-4 w-4" strokeWidth={2} />
@@ -288,7 +288,7 @@ export default function AnimatedLanding() {
 
               <div
                 data-float-card
-                className="absolute -right-2 bottom-2 left-auto flex items-center gap-2.5 rounded-xl border border-border/60 bg-card/80 px-3 py-2.5 shadow-xl shadow-black/40 backdrop-blur md:bottom-0 md:-left-14 md:right-auto md:gap-3 md:px-4 md:py-3"
+                className="absolute -right-2 bottom-2 left-auto flex items-center gap-2.5 rounded-xl border border-border/60 bg-card/80 px-3 py-2.5 shadow-lg shadow-black/[0.07] dark:shadow-xl dark:shadow-black/40 backdrop-blur md:bottom-0 md:-left-14 md:right-auto md:gap-3 md:px-4 md:py-3"
               >
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent/15 text-accent md:h-9 md:w-9">
                   <Calculator className="h-4 w-4" strokeWidth={2} />

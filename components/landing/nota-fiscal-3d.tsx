@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
+import { useTheme } from "next-themes";
 import * as THREE from "three";
 
 const CORAL = "#ff7759";
@@ -178,6 +179,8 @@ function Invoice({ reducedMotion }: { reducedMotion: boolean }) {
 export default function NotaFiscal3D() {
   const [mounted, setMounted] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const { resolvedTheme } = useTheme();
+  const light = resolvedTheme === "light";
 
   useEffect(() => {
     setMounted(true);
@@ -196,9 +199,13 @@ export default function NotaFiscal3D() {
         dpr={[1, 2]}
         gl={{ antialias: true, alpha: true }}
       >
-        <ambientLight intensity={0.9} />
-        <directionalLight position={[3, 4, 5]} intensity={1.4} />
-        <pointLight position={[-4, -2, 3]} intensity={20} color={CORAL} />
+        <ambientLight intensity={light ? 1.55 : 0.9} />
+        <directionalLight position={[3, 4, 5]} intensity={light ? 1.2 : 1.4} />
+        <pointLight
+          position={[-4, -2, 3]}
+          intensity={light ? 7 : 20}
+          color={CORAL}
+        />
         <Invoice reducedMotion={reducedMotion} />
       </Canvas>
     </div>
