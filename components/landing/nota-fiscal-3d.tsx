@@ -169,9 +169,9 @@ function Invoice({ reducedMotion }: { reducedMotion: boolean }) {
           map={texture}
           roughness={0.5}
           metalness={0}
-          clearcoat={0.9}
-          clearcoatRoughness={0.18}
-          envMapIntensity={1.4}
+          clearcoat={0.7}
+          clearcoatRoughness={0.26}
+          envMapIntensity={1.0}
           side={THREE.DoubleSide}
           alphaTest={0.5}
         />
@@ -215,7 +215,7 @@ export default function NotaFiscal3D() {
           {/* facho principal — faixa estreita que reflete como um brilho deslizante */}
           <Lightformer
             form="rect"
-            intensity={4}
+            intensity={2.4}
             position={[2, 1.5, 5]}
             rotation={[0, 0, 0.5]}
             scale={[1.6, 9, 1]}
