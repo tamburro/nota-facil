@@ -167,11 +167,11 @@ function Invoice({ reducedMotion }: { reducedMotion: boolean }) {
         <planeGeometry ref={geomRef} args={[2.5, 3.3, 40, 52]} />
         <meshPhysicalMaterial
           map={texture}
-          roughness={0.55}
+          roughness={0.5}
           metalness={0}
-          clearcoat={0.35}
-          clearcoatRoughness={0.4}
-          envMapIntensity={0.7}
+          clearcoat={0.9}
+          clearcoatRoughness={0.18}
+          envMapIntensity={1.4}
           side={THREE.DoubleSide}
           alphaTest={0.5}
         />
@@ -211,16 +211,25 @@ export default function NotaFiscal3D() {
           color={CORAL}
         />
         {/* reflexo de luz ambiente (sem HDR externo) */}
-        <Environment resolution={128} frames={1}>
+        <Environment resolution={256} frames={1}>
+          {/* facho principal — faixa estreita que reflete como um brilho deslizante */}
           <Lightformer
-            intensity={light ? 1.4 : 1}
-            position={[2, 3, 4]}
-            scale={[7, 7, 1]}
+            form="rect"
+            intensity={4}
+            position={[2, 1.5, 5]}
+            rotation={[0, 0, 0.5]}
+            scale={[1.6, 9, 1]}
             color="#ffffff"
           />
           <Lightformer
-            intensity={0.45}
-            position={[-4, -1, 2]}
+            intensity={light ? 1.4 : 1}
+            position={[-3, 3, 4]}
+            scale={[6, 6, 1]}
+            color="#ffffff"
+          />
+          <Lightformer
+            intensity={0.6}
+            position={[-4, -2, 2]}
             scale={[6, 6, 1]}
             color="#ffd9cf"
           />
