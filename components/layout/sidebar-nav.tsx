@@ -21,7 +21,7 @@ export function SidebarNav() {
   const pathname = usePathname();
 
   return (
-    <aside className="flex flex-col w-60 border-r border-border/50 bg-sidebar min-h-screen px-3 py-5">
+    <aside className="hidden md:flex flex-col w-60 border-r border-border/50 bg-sidebar min-h-screen px-3 py-5">
       <Link
         href="/dashboard"
         className="font-[family-name:var(--font-display)] text-lg font-medium tracking-tight px-3 mb-8"
